@@ -11,10 +11,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ResultVO<E> implements Serializable {
+public class ResultVO implements Serializable {
     private Integer status;
     private String message;
-    private  E  e;
+    private  Object  returnObj;
     public ResultVO(Integer status,String message){
         this.message=message;
         this.status=status;
