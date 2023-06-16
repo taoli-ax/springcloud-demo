@@ -1,6 +1,6 @@
 package com.example.order.service.impl;
 
-import com.example.order.entity.Orders;
+import com.example.orders.Orders;
 import com.example.order.mapper.OrdersMapper;
 import com.example.order.service.IOrdersService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

@@ -1,7 +1,7 @@
 package com.example.products.service.impl;
 
 import com.example.products.service.IProductsService;
-import com.example.products.entity.Products;
+import com.example.products.Products;
 import com.example.products.mapper.ProductsMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;

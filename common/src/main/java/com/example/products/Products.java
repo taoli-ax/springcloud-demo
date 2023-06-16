@@ -1,4 +1,4 @@
-package com.example.products.entity;
+package com.example.products;
 
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
