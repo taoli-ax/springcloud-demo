@@ -5,15 +5,21 @@ import com.alibaba.fastjson2.JSONObject;
 import com.example.common.Constant;
 import com.example.common.ResultVO;
 import com.example.order.service.IOrdersService;
+import com.example.order.eureka.WebHealthIndicatorImpl;
 import com.example.orders.Orders;
 import com.example.products.Products;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,8 +34,17 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/orders")
 public class OrdersController {
+    @Value("${myUrl}")
+    String myUrl;
     @Autowired
     private IOrdersService ordersService;
+
+
+    @Autowired
+    DiscoveryClient discoveryClient;
+
+    @Autowired
+    WebHealthIndicatorImpl webHealthIndicator;
 
     @Resource
     private RestTemplate restTemplate;
@@ -39,7 +54,10 @@ public class OrdersController {
         List<Orders> ordersList=ordersService.list();
         return new ResultVO(200,"OK",ordersList);
     }
-
+    @GetMapping("/getPort")
+    public  ResultVO getPort(){
+       return restTemplate.getForObject(myUrl+"getPort",ResultVO.class);
+    }
     @GetMapping("/{pid}")
     public ResultVO getOrderById(@PathVariable("pid") Integer pid){
         Orders orders=ordersService.getById(pid);
@@ -49,17 +67,29 @@ public class OrdersController {
         return new ResultVO(Constant.OPEN_SUCCESS,"OK",orders);
     }
 
-    @GetMapping("/addOrder/{pid}")
-    public ResultVO addOrder(@PathVariable("pid") Integer pid){
+    @GetMapping("/addOrder/{pid}/{uname}")
+    public ResultVO addOrder(@PathVariable("pid") Integer pid ,@PathVariable("uname") String uname){
+        // 发现服务
+        List<ServiceInstance> instancesById = discoveryClient.getInstances("products");
+//        StringBuilder stringBuilder=new StringBuilder();
+//        for (ServiceInstance info:instancesById
+//             ) {
+//            stringBuilder.append(info.getUri());
+//        }
+        // 调用服务
+//        ResultVO resultVO = restTemplate.getForObject(stringBuilder.toString()+"/products/"+pid,ResultVO.class);
+        // 负载均衡
+//        URI uri=URI.create(String.format("http://%s/%s/%s",instancesById.get(0).getServiceId(),"products",pid));
+        ResultVO resultVO =restTemplate.getForObject(myUrl+pid,ResultVO.class);
 
-        ResultVO resultVO = restTemplate.getForObject("http://localhost:8080/products/"+pid,ResultVO.class);
+        // 将产品表的Item插入订单表
         assert resultVO!=null;
         if(resultVO.getStatus()==Constant.OPEN_SUCCESS & Objects.equals(resultVO.getMessage(), "OK")){
-
             // 字节码转为实体类
             String jsonObject=JSONObject.toJSONString(resultVO.getReturnObj());
             Orders orders= JSONObject.parseObject(jsonObject,Orders.class);
-            //hu.tool的Beanutil方法
+            orders.setUname(uname);
+            //hu.tool的BeanUtil方法
 //            Orders orders=new Orders();
 //            orders.setUname("panda");
 //            Map product=(Map)resultVO.getReturnObj();
@@ -91,6 +121,13 @@ public class OrdersController {
 
 
     }
+
+    @GetMapping("/health")
+    public ResultVO healthCheck(@RequestParam("status") String status){
+        webHealthIndicator.setStatus(status);
+        return new ResultVO(200,"OK,健康检查成功",webHealthIndicator.getStatus());
+    }
+
 
 
 }
