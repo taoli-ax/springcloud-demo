@@ -1,5 +1,6 @@
 server:
-  port: 8081
+  port: 8088
+
 
 spring:
   datasource:
@@ -7,3 +8,23 @@ spring:
     url: jdbc:mysql://localhost:3306/prj32orders?serverTimezone=GMT
     username: root
     password: 123456
+  application:
+    name: orders
+
+myUrl: http://PRODUCTS/products/
+
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone:
+        http://localhost:9000/eureka
+    healthcheck:
+      enabled: true
+
