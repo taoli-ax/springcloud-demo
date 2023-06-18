@@ -4,6 +4,7 @@ package com.example.order.controller;
 import com.alibaba.fastjson2.JSONObject;
 import com.example.common.Constant;
 import com.example.common.ResultVO;
+import com.example.order.service.IFeignProductsService;
 import com.example.order.service.IOrdersService;
 import com.example.order.eureka.WebHealthIndicatorImpl;
 import com.example.orders.Orders;
@@ -39,6 +40,8 @@ public class OrdersController {
     @Autowired
     private IOrdersService ordersService;
 
+    @Autowired
+    private IFeignProductsService iFeignProductsService;
 
     @Autowired
     DiscoveryClient discoveryClient;
@@ -54,9 +57,14 @@ public class OrdersController {
         List<Orders> ordersList=ordersService.list();
         return new ResultVO(200,"OK",ordersList);
     }
-    @GetMapping("/getPort")
-    public  ResultVO getPort(){
+    @GetMapping("/getPortByRest")
+    public  ResultVO getPortByRestTemplate(){
        return restTemplate.getForObject(myUrl+"getPort",ResultVO.class);
+    }
+
+    @GetMapping("/getPort")
+    public ResultVO getPortByFeign(){
+        return iFeignProductsService.remoteGetPort();
     }
     @GetMapping("/{pid}")
     public ResultVO getOrderById(@PathVariable("pid") Integer pid){
