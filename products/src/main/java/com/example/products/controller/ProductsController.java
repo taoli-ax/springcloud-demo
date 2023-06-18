@@ -25,8 +25,10 @@ public class ProductsController {
     @Resource
     private IProductsService productsService;
     @GetMapping("/getPort")
-    public  ResultVO getPort(HttpServletRequest request){
+    public  ResultVO getPort(HttpServletRequest request) throws InterruptedException {
         System.out.println("get port");
+//        int a =1/0;//服务降级
+        Thread.sleep(100000);//超时引发降级
         int servePort=request.getServerPort();
         return new ResultVO(Constant.OPEN_SUCCESS,"OK,server port is "+servePort,null);
     }

@@ -2,6 +2,7 @@ package com.example.order.controller;
 
 
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.example.common.Constant;
 import com.example.common.ResultVO;
 import com.example.order.service.IFeignProductsService;
@@ -10,6 +11,7 @@ import com.example.order.eureka.WebHealthIndicatorImpl;
 import com.example.orders.Orders;
 import com.example.products.Products;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
@@ -58,8 +60,13 @@ public class OrdersController {
         return new ResultVO(200,"OK",ordersList);
     }
     @GetMapping("/getPortByRest")
+    @HystrixCommand(fallbackMethod = "getPortFallBack")//降级后调用
     public  ResultVO getPortByRestTemplate(){
        return restTemplate.getForObject(myUrl+"getPort",ResultVO.class);
+    }
+
+    public ResultVO getPortFallBack(){
+        return new ResultVO(Constant.OPEN_SUCCESS,"降级，服务暂停,111",null);
     }
 
     @GetMapping("/getPort")
