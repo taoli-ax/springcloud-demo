@@ -13,6 +13,9 @@ spring:
 
 myUrl: http://PRODUCTS/products/
 
+PRODUCTS:
+  ribbon:
+    NFLoadBalanceRuleClassName: com.netflix.loadbalancer.RandomRule
 
 
 eureka:
@@ -28,3 +31,5 @@ eureka:
     healthcheck:
       enabled: true
 
+ribbon:
+  NFL

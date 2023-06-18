@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 @MapperScan("com.example.order.mapper")
 @EnableEurekaClient
 @EnableDiscoveryClient
-@RibbonClient(name = "cloud-payment-service",configuration = RandomRule.class)
+//@RibbonClient(name = "cloud-payment-service",configuration = RandomRule.class)
 public class OrderApplication {
     public static void main(String[] args){
         SpringApplication.run(OrderApplication.class,args);
