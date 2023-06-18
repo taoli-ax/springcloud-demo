@@ -66,7 +66,7 @@ public class OrdersController {
     public ResultVO getPortByFeign(){
         return iFeignProductsService.remoteGetPort();
     }
-    @GetMapping("/{pid}")
+    @GetMapping("/getById/{pid}")
     public ResultVO getOrderById(@PathVariable("pid") Integer pid){
         Orders orders=ordersService.getById(pid);
         if(orders==null){
@@ -74,6 +74,13 @@ public class OrdersController {
         }
         return new ResultVO(Constant.OPEN_SUCCESS,"OK",orders);
     }
+
+    @GetMapping("/{pid}")
+    public ResultVO getOrderByIdFeign(@PathVariable("pid") Integer pid){
+        return iFeignProductsService.remoteGetById(pid);
+    }
+
+
 
     @GetMapping("/addOrder/{pid}/{uname}")
     public ResultVO addOrder(@PathVariable("pid") Integer pid ,@PathVariable("uname") String uname){
@@ -126,8 +133,17 @@ public class OrdersController {
         products.setDescription("一般般");
         products.setPprice(new BigDecimal("10.00"));
         return restTemplate.postForObject("http://localhost:8080/products/save",products,ResultVO.class);
+    }
 
 
+    @GetMapping("/saveFeign")
+    public ResultVO remoteProductByFeign() {
+        Products products = new Products();
+        products.setPname("鱼豆腐");
+        products.setStorecount(50);
+        products.setDescription("假的？");
+        products.setPprice(new BigDecimal("2.00"));
+        return iFeignProductsService.remoteSave(products);
     }
 
     @GetMapping("/health")
