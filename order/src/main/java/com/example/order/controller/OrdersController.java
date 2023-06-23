@@ -158,7 +158,10 @@ public class OrdersController {
         webHealthIndicator.setStatus(status);
         return new ResultVO(200,"OK,健康检查成功",webHealthIndicator.getStatus());
     }
-
+    @GetMapping("/zuul")
+    public ResultVO getZuul(){
+        return new ResultVO(Constant.OPEN_SUCCESS,"orders zuul",null);
+    }
 
 
 }

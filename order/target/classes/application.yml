@@ -31,5 +31,3 @@ eureka:
     healthcheck:
       enabled: true
 
-ribbon:
-  NFL

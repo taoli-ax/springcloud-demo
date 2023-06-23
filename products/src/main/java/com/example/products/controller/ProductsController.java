@@ -52,5 +52,10 @@ public class ProductsController {
         return new ResultVO(Constant.OPEN_SUCCESS,"OK,新增商品成功",success);
     }
 
+    @GetMapping("/zuul")
+    public ResultVO getZuul(){
+        return new ResultVO(Constant.OPEN_SUCCESS,"products zuul",null);
+    }
+
 
 }

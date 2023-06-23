@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: zuul
+
+
+server:
+  port: 10000
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone:
+        http://localhost:9000/eureka
+    healthcheck:
+      enabled: true
+
+zuul:
+  routes:
+    o:
+      path: /orders/**
+      serviceId: orders
+    p:
+      path: /products/**
+      serviceId: products
