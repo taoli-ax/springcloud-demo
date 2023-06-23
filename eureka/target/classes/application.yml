@@ -1,0 +1,56 @@
+
+spring:
+  application:
+    name: eureka-server
+
+---
+spring:
+  profiles: sparrow
+server:
+  port: 9000
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone:
+        http://localhost:9001/eureka,http://localhost:9002/eureka
+  instance:
+    prefer-ip-address: true
+
+
+---
+spring:
+  profiles: sparrow1
+server:
+  port: 9001
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone:
+        http://localhost:9000/eureka,http://localhost:9002/eureka
+  instance:
+    prefer-ip-address: true
+
+
+---
+spring:
+  profiles:
+      active: sparrow2
+
+server:
+  port: 9002
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone:
+        http://localhost:9001/eureka,http://localhost:9000/eureka
+  instance:
+    prefer-ip-address: true
